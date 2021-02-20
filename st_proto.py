@@ -53,7 +53,7 @@ if selection == 'Поиск взаимосвязей':
 				p - первичный уровень значимости для данной пары<br>
 				p_corrected - скорректированный уровень значимости для данной пары
 	""", unsafe_allow_html=True)
-	st.header('Построчный анализ одтвержденных корреляций')
+	st.header('Построчный анализ подтвержденных корреляций')
 	zz=pd.unique(df_cov_true.A)
 	option = st.selectbox('Выберите строки для анализа',zz)
 	#st.write('You selected:', option)
