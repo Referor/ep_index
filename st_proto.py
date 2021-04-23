@@ -10,13 +10,13 @@ import plotly.express as px
 import matplotlib.pyplot as plt
 #https://medium.com/@u.praneel.nihar/building-multi-page-web-app-using-streamlit-7a40d55fa5b4
 st.sidebar.title('Navigation')
-selection = st.sidebar.radio("Go to", ['Сводный индекс','Визуализация исходных данных', 'Поиск взаимосвязей', 'О проекте'])
+selection = st.sidebar.radio("Go to", ['Сводный индекс','Визуализация исходных данных', 'Карта корреляций','Поиск взаимосвязей', 'О проекте'])
 if selection == 'Сводный индекс':
 	st.header('Сводный индекс эпидемической обстановки')
 	sum_cor2=pd.read_excel('data/index_correlated.xlsx')
-	fig2 = px.scatter(sum_cor2, x='month', y="relative",
-	     size="relative", hover_name=sum_cor2.month,color_discrete_sequence=px.colors.diverging.RdYlBu, 
-	                 color='relative', log_y=True, size_max=100,  hover_data=['absolute'])
+	fig2 = px.scatter(sum_cor2, x='month', y="absolute",
+	     size="absolute", hover_name=sum_cor2.month,color_discrete_sequence=px.colors.diverging.RdYlBu, 
+	                 color='absolute', log_y=True, size_max=100,  hover_data=['absolute'])
 	st.plotly_chart(fig2)
 	st.markdown('Absolute - общее количество коррелирующих с ковидом запросов за месяц')
 	st.markdown('Reative - относительное количество запросов, по сравнению с максимумом')
@@ -50,6 +50,16 @@ if selection == 'Визуализация исходных данных':
 	fig.update_traces(mode='markers+lines')
 	fig.update_layout(legend_traceorder="reversed")
 	st.plotly_chart(fig)
+if selection == 'Карта корреляций':
+	cov_corr_t=pd.read_excel('data/corr_true_data.xlsx')
+	cov_pivot=pd.pivot_table(cov_corr_t,  values='corr', index=['A'],
+              columns=['B'])
+	fig = go.Figure(data=go.Heatmap(
+                   z=cov_pivot,
+                   x=cov_pivot.columns,
+                   y=cov_pivot.columns,
+                   hoverongaps = False, colorscale='deep'))
+	fig.show()
 if selection == 'Поиск взаимосвязей':
 	st.header('Поиск взаимосвязей. Методика расчета')
 	st.markdown("""Для поиска связей в данных были подготовленны датасеты помесячных данных релевантной поисковой статистики и статистики COVID-19<br>
